@@ -1,39 +1,8 @@
-run = "gradle run"
-
-[agent]
-expertMode = true
+run = "./gradlew run"
 
 [nix]
 channel = "stable-25_05"
 
 [[ports]]
-localPort = 5000
-externalPort = 80
-
-[[ports]]
 localPort = 8080
 externalPort = 80
-
-[workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "run-app"
-
-[[workflows.workflow]]
-name = "run-app"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "./gradlew run"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
