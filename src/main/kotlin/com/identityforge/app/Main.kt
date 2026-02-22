@@ -7,7 +7,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
 fun main() {
-  val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
+  val port = System.getenv("PORT")?.toIntOrNull() ?: 5000
   val host = "0.0.0.0"
 
   val dbPath = System.getenv("DB_PATH") ?: "identityforge.db"
