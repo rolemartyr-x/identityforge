@@ -47,7 +47,10 @@ class WebRoutes(private val db: SqliteDatabase) {
 
         h3 { +"Create identity" }
         form(action = "/identities", method = FormMethod.post) {
-          textInput(name = "name") { placeholder = "Identity name" }
+          textInput {
+            name = "name"
+            placeholder = "Identity name"
+          }
           submitInput { value = "Create" }
         }
 
@@ -107,7 +110,8 @@ class WebRoutes(private val db: SqliteDatabase) {
           form(action = "/habits", method = FormMethod.post) {
             label {
               +"Identity: "
-              select(name = "identityId") {
+              select {
+                name = "identityId"
                 identityList.forEach { i ->
                   option {
                     value = i.id.toString()
@@ -117,7 +121,10 @@ class WebRoutes(private val db: SqliteDatabase) {
               }
             }
             br()
-            textInput(name = "name") { placeholder = "Habit name" }
+            textInput {
+              name = "name"
+              placeholder = "Habit name"
+            }
             submitInput { value = "Create" }
           }
         }
@@ -194,7 +201,10 @@ class WebRoutes(private val db: SqliteDatabase) {
         form(action = "/habits/${habit.id}/votes", method = FormMethod.post) {
           label {
             +"Value (optional integer): "
-            textInput(name = "value") { placeholder = "blank means no value" }
+            textInput {
+              name = "value"
+              placeholder = "blank means no value"
+            }
           }
           submitInput { value = "Cast vote" }
         }
