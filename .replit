@@ -1,4 +1,4 @@
-run = "./gradlew run"
+run = "gradle run"
 
 [nix]
 channel = "stable-25_05"
