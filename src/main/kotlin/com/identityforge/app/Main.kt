@@ -9,7 +9,6 @@ import io.ktor.server.netty.Netty
 fun main() {
   val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
   val host = "0.0.0.0"
-
   val dbPath = System.getenv("DB_PATH") ?: "identityforge.db"
   val jdbcUrl = "jdbc:sqlite:$dbPath"
 
@@ -19,8 +18,4 @@ fun main() {
   embeddedServer(Netty, port = port, host = host) {
     module(database)
   }.start(wait = true)
-}
-
-fun Application.module(database: SqliteDatabase) {
-  WebRoutes(database).install(this)
 }
