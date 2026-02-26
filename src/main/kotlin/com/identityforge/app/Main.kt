@@ -2,7 +2,6 @@ package com.identityforge.app
 
 import com.identityforge.app.db.SqliteDatabase
 import com.identityforge.app.web.WebRoutes
-import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
@@ -16,6 +15,6 @@ fun main() {
   database.migrate()
 
   embeddedServer(Netty, port = port, host = host) {
-    module(database)
+    WebRoutes(database).install(this)
   }.start(wait = true)
 }
