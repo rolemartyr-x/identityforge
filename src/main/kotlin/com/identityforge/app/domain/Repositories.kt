@@ -6,6 +6,10 @@ interface IdentityRepository {
   fun listActive(): List<Identity>
   fun getActive(id: UUID): Identity?
   fun create(name: String, now: Long): Identity
+  fun softDelete(id: UUID, now: Long): Boolean
+  fun getIdentityDashboardItems(now: Long): List<IdentityDashboardItem>
+  fun castVote(identityId: UUID, now: Long): Vote
+  fun listVoteHistory(limit: Int = 200): List<VoteHistoryItem>
 }
 
 interface HabitRepository {

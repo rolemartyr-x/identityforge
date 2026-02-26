@@ -57,10 +57,13 @@ class SqliteDatabase(private val jdbcUrl: String) {
             """
             CREATE TABLE IF NOT EXISTS votes (
               id TEXT PRIMARY KEY,
+              identity_id TEXT NOT NULL,
               habit_id TEXT NOT NULL,
               value INTEGER NULL,
               created_at INTEGER NOT NULL,
+              updated_at INTEGER NOT NULL,
               deleted_at INTEGER NULL,
+              FOREIGN KEY(identity_id) REFERENCES identities(id),
               FOREIGN KEY(habit_id) REFERENCES habits(id)
             )
             """.trimIndent()
@@ -68,6 +71,32 @@ class SqliteDatabase(private val jdbcUrl: String) {
 
           st.execute("CREATE INDEX IF NOT EXISTS idx_habits_identity_id ON habits(identity_id)")
           st.execute("CREATE INDEX IF NOT EXISTS idx_votes_habit_id_created_at ON votes(habit_id, created_at DESC)")
+        }
+      }
+
+      applyMigration(conn, version = 2) {
+        conn.createStatement().use { st ->
+          if (!conn.columnExists("votes", "identity_id")) {
+            st.execute("ALTER TABLE votes ADD COLUMN identity_id TEXT")
+          }
+          if (!conn.columnExists("votes", "updated_at")) {
+            st.execute("ALTER TABLE votes ADD COLUMN updated_at INTEGER")
+          }
+        }
+
+        conn.createStatement().use { st ->
+          st.execute(
+            """
+            UPDATE votes
+            SET identity_id = (
+              SELECT habits.identity_id
+              FROM habits
+              WHERE habits.id = votes.habit_id
+            )
+            WHERE identity_id IS NULL
+            """.trimIndent()
+          )
+          st.execute("UPDATE votes SET updated_at = created_at WHERE updated_at IS NULL")
         }
       }
     }
@@ -93,4 +122,17 @@ class SqliteDatabase(private val jdbcUrl: String) {
       ps.executeUpdate()
     }
   }
+}
+
+private fun Connection.columnExists(table: String, column: String): Boolean {
+  prepareStatement("PRAGMA table_info($table)").use { ps ->
+    ps.executeQuery().use { rs ->
+      while (rs.next()) {
+        if (rs.getString("name") == column) {
+          return true
+        }
+      }
+    }
+  }
+  return false
 }

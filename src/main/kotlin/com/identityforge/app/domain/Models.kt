@@ -21,10 +21,26 @@ data class Habit(
 
 data class Vote(
   val id: UUID,
+  val identityId: UUID,
   val habitId: UUID,
   val value: Int?,
   val createdAt: Long,
+  val updatedAt: Long,
   val deletedAt: Long?
+)
+
+data class IdentityDashboardItem(
+  val identityId: UUID,
+  val identityName: String,
+  val votesToday: Int,
+  val totalVotes: Int,
+  val votesLast7Days: Int
+)
+
+data class VoteHistoryItem(
+  val voteId: UUID,
+  val identityName: String,
+  val createdAt: Long
 )
 
 data class HabitWithStats(
