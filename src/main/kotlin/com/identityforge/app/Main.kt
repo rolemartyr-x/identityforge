@@ -2,12 +2,11 @@ package com.identityforge.app
 
 import com.identityforge.app.db.SqliteDatabase
 import com.identityforge.app.web.WebRoutes
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 
 fun main() {
-  val port = System.getenv("PORT")?.toIntOrNull() ?: 5000
+  val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
   val host = "0.0.0.0"
 
   val dbPath = System.getenv("DB_PATH") ?: "identityforge.db"
@@ -17,10 +16,6 @@ fun main() {
   database.migrate()
 
   embeddedServer(Netty, port = port, host = host) {
-    module(database)
+    WebRoutes(database).install(this)
   }.start(wait = true)
-}
-
-fun Application.module(database: SqliteDatabase) {
-  WebRoutes(database).install(this)
 }
