@@ -1,4 +1,4 @@
-run = "gradle run"
+run = "gradle clean run"
 
 [nix]
 channel = "stable-25_05"
